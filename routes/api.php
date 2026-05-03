@@ -3,6 +3,14 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\FileController;
+
+// Endpoint untuk upload
+Route::post('/upload-document', [FileController::class, 'upload'])->middleware('auth');
+
+// Endpoint untuk melihat/download file private
+Route::get('/files/{id}', [FileController::class, 'show'])->middleware('auth');
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
