@@ -16,7 +16,7 @@ class PatientResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'nama_pasien' => $this->user->name, // Relasi ke tabel user
+            'nama_pasien' => optional($this->user)->name ?? 'Tidak Ada Nama', 
             'nik' => $this->nik,
             'jenis_kelamin' => $this->gender,
             'tanggal_lahir' => $this->birth_date,
