@@ -1,27 +1,111 @@
-public function upload(Request $request)
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Models\Patient;
+use App\Models\User;
+use App\Http\Resources\v1\PatientResource;
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
+class PatientController extends Controller
 {
-    // 1. Validasi (Maks 5MB & Mime-type)
-    $request->validate([
-        'file' => 'required|file|mimes:jpg,jpeg,png,pdf,docx|max:5120', // 5120KB = 5MB
-        'type' => 'required|string' // misal: 'profile' atau 'medical_doc'
-    ]);
+    use ApiResponse;
 
-    if ($request->hasFile('file')) {
-        $file = $request->file('file');
+    public function index()
+    {
+        $patients = Patient::with('user')->paginate(10);
+        $resource = PatientResource::collection($patients);
+        $data = array_merge(
+            ['items' => $resource->toArray(request())],
+            $resource->response()->getData(true)
+        );
         
-        // 2. Simpan ke folder private (storage/app/private/...)
-        $path = $file->store('private/documents');
+        unset($data['data']);
+        return $this->success($data, 'Daftar pasien berhasil diambil');
+    }
 
-        // 3. Simpan data ke tabel polimorfik
-        // Contoh untuk user yang sedang login
-        $user = auth()->user();
-        $user->files()->create([
-            'path' => $path,
-            'filename' => $file->getClientOriginalName(),
-            'mime_type' => $file->getClientMimeType(),
-            'size' => $file->getSize(),
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8',
+            'date_of_birth' => 'required|date',
+            'address' => 'required|string',
+            'phone' => 'required',
         ]);
 
-        return response()->json(['message' => 'Upload berhasil!'], 201);
+        try {
+            DB::beginTransaction();
+
+            // Simpan ke tabel users
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'patient',
+            ]);
+
+            // Simpan ke tabel patients
+            $patient = Patient::create([
+                'user_id' => $user->id,
+                'date_of_birth' => $request->date_of_birth,
+                'address' => $request->address,
+                'phone' => $request->phone,
+            ]);
+
+            DB::commit();
+            return $this->success(new PatientResource($patient), 'Pasien berhasil ditambahkan', 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error('Gagal menambah pasien: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $patient = Patient::findOrFail($id);
+        $user = $patient->user;
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'required|min:8',
+            'date_of_birth' => 'required|date',
+            'address' => 'required|string',
+            'phone' => 'required',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Update tabel users
+            $user->update($request->only(['name', 'email']));
+            
+            // Update tabel patients
+            $patient->update($request->only(['date_of_birth', 'address', 'phone']));
+
+            DB::commit();
+            return $this->success(new PatientResource($patient), 'Data pasien berhasil diupdate');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error('Gagal update pasien', 500);
+        }
+    }
+
+    public function show($id)
+    {
+        $patient = Patient::with('user')->findOrFail($id);
+        return $this->success(new PatientResource($patient), 'Detail pasien ditemukan');
+    }
+
+    public function destroy($id)
+    {
+        $patient = Patient::findOrFail($id);
+        $patient->user->delete();
+        return $this->success(null, 'Data pasien berhasil dihapus');
     }
 }
