@@ -24,7 +24,13 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            // Karena error handling terpusat di app.php juga nangkap 422, ini bisa dilempar sebagai Exception
+            // Tapi mereturn respons langsung seperti ini juga aman
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         $user = User::create([
@@ -44,6 +50,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Registration success',
             'access_token' => $token,
             'token_type' => 'Bearer',
@@ -54,6 +61,7 @@ class AuthController extends Controller
     {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Invalid login details'
             ], 401);
         }
@@ -62,11 +70,12 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Login success',
             'access_token' => $token,
             'token_type' => 'Bearer',
             'role' => $user->role
-        ]);
+        ], 200);
     }
 
     public function logout(Request $request)
@@ -74,7 +83,8 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Logged out successfully'
-        ]);
+        ], 200);
     }
 }

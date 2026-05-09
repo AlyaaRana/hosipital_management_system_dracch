@@ -2,27 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Doctor;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<Doctor>
- */
 class DoctorFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::factory(),
-            'specialization' => fake()->randomElement(['Umum', 'Gigi', 'Anak', 'Kandungan', 'Penyakit Dalam']), // kategori dokter
-            'phone' => fake('id_ID')->phoneNumber(),
-            'photo' => 'doctors/default.jpg',
+            'user_id' => User::factory()->state(['role' => 'doctor']),
+            'specialization' => fake('id_ID')->randomElement(['Dokter Umum', 'Spesialis Anak', 'Spesialis Jantung', 'Spesialis Bedah', 'Spesialis Saraf']),
+            'phone' => '+628' . fake()->numerify('##########'),
         ];
     }
 }

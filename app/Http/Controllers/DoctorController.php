@@ -15,12 +15,11 @@ class DoctorController extends Controller
 {
     use ApiResponse;
 
-    // 1. READ List dengan Pagination
     public function index()
     {
-        $doctors = Doctor::with('user')->paginate(10);    
+        $doctors = Doctor::with('user')->paginate(10);
         $resource = DoctorResource::collection($doctors);
-        
+
         $data = array_merge(
             ['items' => $resource->toArray(request())],
             $resource->response()->getData(true)
@@ -29,7 +28,6 @@ class DoctorController extends Controller
         return $this->success($data, 'Daftar dokter berhasil diambil');
     }
 
-    // 2. CREATE Dokter Baru
     public function store(Request $request)
     {
         $request->validate([
@@ -43,7 +41,6 @@ class DoctorController extends Controller
         try {
             DB::beginTransaction();
 
-            // Buat User
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -51,7 +48,6 @@ class DoctorController extends Controller
                 'role' => 'doctor',
             ]);
 
-            // Buat Detail Dokter
             $doctor = Doctor::create([
                 'user_id' => $user->id,
                 'specialization' => $request->specialization,
@@ -66,14 +62,12 @@ class DoctorController extends Controller
         }
     }
 
-    // 3. READ Detail Satu Dokter
     public function show($id)
     {
         $doctor = Doctor::with('user')->findOrFail($id);
         return $this->success(new DoctorResource($doctor), 'Detail dokter berhasil diambil');
     }
 
-    // 4. UPDATE Dokter
     public function update(Request $request, $id)
     {
         $doctor = Doctor::findOrFail($id);
@@ -82,7 +76,7 @@ class DoctorController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|min:8', // Password jadi opsional saat update
+            'password' => 'nullable|min:8',
             'specialization' => 'required',
             'phone' => 'required'
         ]);
@@ -90,14 +84,12 @@ class DoctorController extends Controller
         try {
             DB::beginTransaction();
 
-            // Update User
             $userData = $request->only(['name', 'email']);
             if ($request->filled('password')) {
                 $userData['password'] = Hash::make($request->password);
             }
             $user->update($userData);
 
-            // Update Detail Dokter
             $doctor->update($request->only(['specialization', 'phone']));
 
             DB::commit();
@@ -108,13 +100,11 @@ class DoctorController extends Controller
         }
     }
 
-    // 5. DELETE Dokter
     public function destroy($id)
     {
         $doctor = Doctor::findOrFail($id);
-        
+
         try {
-            // Hapus User-nya, tabel doctor akan ikut terhapus karena Cascade Delete
             $doctor->user->delete();
             return $this->success(null, 'Dokter berhasil dihapus');
         } catch (\Exception $e) {
