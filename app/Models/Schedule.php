@@ -9,7 +9,7 @@ class Schedule extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['doctor_id', 'day', 'start_time', 'end_time', 'available_slots'];
+    protected $fillable = ['doctor_id', 'day_of_week', 'start_time', 'end_time', 'available_slots'];
 
     public function doctor() {
         return $this->belongsTo(Doctor::class);

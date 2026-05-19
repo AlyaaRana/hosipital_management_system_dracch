@@ -32,7 +32,8 @@ class AppointmentController extends Controller
                 'doctor_id' => $request->doctor_id,
                 'schedule_id' => $request->schedule_id,
                 'appointment_date' => $request->appointment_date,
-                'status' => 'pending'
+                'status' => 'pending',
+                'complaint' => $request->complaint,
             ]);
 
             $schedule->decrement('available_slots');

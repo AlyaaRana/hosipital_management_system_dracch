@@ -18,23 +18,19 @@ Route::prefix('v1')->group(function () {
 
         Route::post('/auth/logout', [AuthController::class, 'logout']);
 
-        // Role Admin
         Route::middleware('role:admin')->group(function () {
             Route::get('/patients', [PatientController::class, 'index']);
             Route::get('/reports/export', [AppointmentController::class, 'exportReports']);
         });
 
-        // Role Patient
         Route::middleware('role:patient')->group(function () {
             Route::post('/appointments', [AppointmentController::class, 'store']);
         });
 
-        // Role Doctor
         Route::middleware('role:doctor')->group(function () {
             Route::post('/medical-records', [MedicalRecordController::class, 'store']);
         });
 
-        // Shared Routes
         Route::get('/patients/{id}', [PatientController::class, 'show']);
         Route::put('/patients/{id}', [PatientController::class, 'update']);
         Route::get('/doctors', [DoctorController::class, 'index']);
@@ -45,7 +41,6 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/medical-records/{id}', [MedicalRecordController::class, 'show']);
 
-        // File Routes
         Route::post('/files/upload', [FileController::class, 'upload']);
         Route::get('/files/{id}', [FileController::class, 'show']);
         Route::delete('/files/{id}', [FileController::class, 'destroy']);

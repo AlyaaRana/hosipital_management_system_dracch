@@ -17,34 +17,31 @@ class FileController extends Controller
             'type' => 'required|string'
         ]);
 
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-
-            $path = $file->store('private/documents');
-
-            /** @var \App\Models\User $user */
-            $user = Auth::user();
-
-            if (!$user) {
-                return response()->json(['message' => 'User tidak terautentikasi'], 401);
-            }
-
-            $fileData = $user->files()->create([
-                'path' => $path,
-                'filename' => $file->getClientOriginalName(),
-                'mime_type' => $file->getClientMimeType(),
-                'size' => $file->getSize(),
-            ]);
-
-            return response()->json([
-                'message' => 'Upload berhasil!',
-                'data' => $fileData
-            ], 201);
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'User tidak terautentikasi'], 401);
         }
 
-        return response()->json(['message' => 'File tidak ditemukan'], 400);
-    }
+        if (!$request->hasFile('file')) {
+            return response()->json(['message' => 'File tidak ditemukan'], 400);
+        }
 
+        $file = $request->file('file');
+        $path = $file->store('private/documents');
+
+        $fileData = $user->files()->create([
+            'path' => $path,
+            'filename' => $file->getClientOriginalName(),
+            'mime_type' => $file->getClientMimeType(),
+            'size' => $file->getSize(),
+            'uploaded_by' => $user->id,
+        ]);
+
+        return response()->json([
+            'message' => 'Upload berhasil!',
+            'data' => $fileData
+        ], 201);
+    }
 
     public function show($id)
     {
@@ -62,5 +59,19 @@ class FileController extends Controller
         }
 
         return Storage::download($fileRecord->path, $fileRecord->filename);
+    }
+
+    public function destroy($id)
+    {
+        $fileRecord = File::findOrFail($id);
+        $user = Auth::user();
+
+        if ($user->id !== $fileRecord->fileable_id && $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized. Anda tidak memiliki akses untuk menghapus file ini.'], 403);
+        }
+
+        $fileRecord->delete();
+
+        return response()->json(['status' => 'success', 'message' => 'File berhasil dihapus'], 200);
     }
 }

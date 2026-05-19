@@ -18,6 +18,7 @@ return new class extends Migration
         $table->string('fileable_type');
         $table->foreignId('uploaded_by')->constrained('users');
         $table->timestamps();
+        $table->softDeletes();
     });
 }
 

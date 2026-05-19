@@ -22,6 +22,7 @@ class StoreAppointmentRequest extends FormRequest
             'doctor_id'        => 'required|exists:doctors,id',
             'schedule_id'      => 'required|exists:schedules,id',
             'appointment_date' => 'required|date|after_or_equal:today',
+            'complaint'        => 'required|string',
         ];
     }
 }

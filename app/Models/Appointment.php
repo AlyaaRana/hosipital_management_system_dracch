@@ -14,7 +14,8 @@ class Appointment extends Model
         'doctor_id',
         'schedule_id',
         'appointment_date',
-        'status'
+        'status',
+        'complaint'
     ];
 
     public function schedule() {
