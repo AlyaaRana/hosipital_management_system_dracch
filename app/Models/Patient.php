@@ -18,7 +18,7 @@ class Patient extends Model
         'photo'
     ];
 
-    public function user(): BelongsTo
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }

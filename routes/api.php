@@ -26,6 +26,8 @@ Route::prefix('v1')->group(function () {
         Route::middleware('role:admin')->group(function () {
             Route::get('/patients', [PatientController::class, 'index']);
             Route::get('/reports/export', [AppointmentController::class, 'exportReports']);
+            Route::get('medical-records/export/pdf', [MedicalRecordExportController::class, 'exportPdf']);
+            Route::get('medical-records/export/csv', [MedicalRecordExportController::class, 'exportCsv']);
         });
 
         Route::middleware('role:patient')->group(function () {
