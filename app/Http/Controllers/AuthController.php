@@ -24,8 +24,6 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            // Karena error handling terpusat di app.php juga nangkap 422, ini bisa dilempar sebagai Exception
-            // Tapi mereturn respons langsung seperti ini juga aman
             return response()->json([
                 'status' => 'error',
                 'message' => 'Validasi gagal',

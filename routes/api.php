@@ -8,6 +8,7 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\FileController;
+//reportcontroller
 
 Route::prefix('v1')->group(function () {
 
@@ -17,6 +18,10 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/auth/logout', [AuthController::class, 'logout']);
+
+        Route::get('/doctor', [DoctorController::class, 'index']);
+        Route::post('/files/upload', [FileController::class, 'upload']);
+
 
         Route::middleware('role:admin')->group(function () {
             Route::get('/patients', [PatientController::class, 'index']);
@@ -31,17 +36,18 @@ Route::prefix('v1')->group(function () {
             Route::post('/medical-records', [MedicalRecordController::class, 'store']);
         });
 
+        Route::middleware('role:admin,doctor')->group(function () {
+            Route::put('/appointments/{id}', [AppointmentController::class, 'update']);
+        });
+
         Route::get('/patients/{id}', [PatientController::class, 'show']);
         Route::put('/patients/{id}', [PatientController::class, 'update']);
-        Route::get('/doctors', [DoctorController::class, 'index']);
 
         Route::get('/appointments/{id}', [AppointmentController::class, 'show']);
-        Route::put('/appointments/{id}', [AppointmentController::class, 'update']);
         Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
 
         Route::get('/medical-records/{id}', [MedicalRecordController::class, 'show']);
 
-        Route::post('/files/upload', [FileController::class, 'upload']);
         Route::get('/files/{id}', [FileController::class, 'show']);
         Route::delete('/files/{id}', [FileController::class, 'destroy']);
     });

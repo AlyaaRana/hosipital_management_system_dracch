@@ -15,15 +15,22 @@ class DoctorController extends Controller
 {
     use ApiResponse;
 
-    public function index()
+    public function index(Request $request)
     {
         $doctors = Doctor::with('user')->paginate(10);
         $resource = DoctorResource::collection($doctors);
 
-        $data = array_merge(
-            ['items' => $resource->toArray(request())],
-            $resource->response()->getData(true)
-        );
+        $data = [
+            'items' => $resource->toArray($request),
+            'meta' => [
+                'current_page' => $doctors->currentPage(),
+                'per_page' => $doctors->perPage(),
+                'total' => $doctors->total(),
+                'last_page' => $doctors->lastPage(),
+                'next_page_url' => $doctors->nextPageUrl(),
+                'prev_page_url' => $doctors->previousPageUrl(),
+            ],
+        ];
 
         return $this->success($data, 'Daftar dokter berhasil diambil');
     }
