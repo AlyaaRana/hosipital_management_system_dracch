@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\MedicalRecordExportController;
 
 // Endpoint untuk upload
 Route::post('/upload-document', [FileController::class, 'upload'])->middleware('auth');
@@ -28,6 +29,9 @@ Route::prefix('v1')->group(function () {
         Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
             Route::apiResource('patients', PatientController::class);
             Route::apiResource('doctors', DoctorController::class);
+            
+            Route::get('medical-records/export/pdf', [MedicalRecordExportController::class, 'exportPdf']);
+            Route::get('medical-records/export/csv', [MedicalRecordExportController::class, 'exportCsv']);
         });
     });
 });
