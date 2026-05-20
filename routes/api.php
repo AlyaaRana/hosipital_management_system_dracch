@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\FileController;
 
 // Endpoint untuk upload
@@ -23,7 +25,9 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
 
-        Route::middleware('role:admin')->group(function () {
+        Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+            Route::apiResource('patients', PatientController::class);
+            Route::apiResource('doctors', DoctorController::class);
         });
     });
 });

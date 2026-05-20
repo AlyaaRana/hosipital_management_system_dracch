@@ -1,5 +1,9 @@
 <?php
 
+ob_start(); // output ditahan sampai response siap
+
+define('LARAVEL_START', microtime(true));
+
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
