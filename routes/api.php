@@ -3,35 +3,54 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\FileController;
-use App\Http\Controllers\MedicalRecordExportController;
-
-// Endpoint untuk upload
-Route::post('/upload-document', [FileController::class, 'upload'])->middleware('auth');
-
-// Endpoint untuk melihat/download file private
-Route::get('/files/{id}', [FileController::class, 'show'])->middleware('auth');
-
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+//reportcontroller
 
 Route::prefix('v1')->group(function () {
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/register', [AuthController::class, 'register']);
+
+    Route::post('/auth/register', [AuthController::class, 'register']);
+    Route::post('/auth/login', [AuthController::class, 'login']);
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout']);
 
-        Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-            Route::apiResource('patients', PatientController::class);
-            Route::apiResource('doctors', DoctorController::class);
-            
+        Route::post('/auth/logout', [AuthController::class, 'logout']);
+
+        Route::get('/doctor', [DoctorController::class, 'index']);
+        Route::post('/files/upload', [FileController::class, 'upload']);
+
+
+        Route::middleware('role:admin')->group(function () {
+            Route::get('/patients', [PatientController::class, 'index']);
+            Route::get('/reports/export', [AppointmentController::class, 'exportReports']);
             Route::get('medical-records/export/pdf', [MedicalRecordExportController::class, 'exportPdf']);
             Route::get('medical-records/export/csv', [MedicalRecordExportController::class, 'exportCsv']);
         });
+
+        Route::middleware('role:patient')->group(function () {
+            Route::post('/appointments', [AppointmentController::class, 'store']);
+        });
+
+        Route::middleware('role:doctor')->group(function () {
+            Route::post('/medical-records', [MedicalRecordController::class, 'store']);
+        });
+
+        Route::middleware('role:admin,doctor')->group(function () {
+            Route::put('/appointments/{id}', [AppointmentController::class, 'update']);
+        });
+
+        Route::get('/patients/{id}', [PatientController::class, 'show']);
+        Route::put('/patients/{id}', [PatientController::class, 'update']);
+
+        Route::get('/appointments/{id}', [AppointmentController::class, 'show']);
+        Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
+
+        Route::get('/medical-records/{id}', [MedicalRecordController::class, 'show']);
+
+        Route::get('/files/{id}', [FileController::class, 'show']);
+        Route::delete('/files/{id}', [FileController::class, 'destroy']);
     });
 });

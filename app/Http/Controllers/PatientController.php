@@ -18,14 +18,20 @@ class PatientController extends Controller
     public function index()
     {
         $patients = Patient::with('user')->paginate(10);
-        $resource = PatientResource::collection($patients);
-        $data = array_merge(
-            ['items' => $resource->toArray(request())],
-            $resource->response()->getData(true)
-        );
-        
-        unset($data['data']);
-        return $this->success($data, 'Daftar pasien berhasil diambil');
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Daftar pasien berhasil diambil',
+            'data' => PatientResource::collection($patients)->items(),
+            'meta' => [
+                'current_page' => $patients->currentPage(),
+                'per_page' => $patients->perPage(),
+                'total' => $patients->total(),
+                'last_page' => $patients->lastPage(),
+                'next_page_url' => $patients->nextPageUrl(),
+                'prev_page_url' => $patients->previousPageUrl(),
+            ]
+        ], 200);
     }
 
     public function store(Request $request)
@@ -42,7 +48,6 @@ class PatientController extends Controller
         try {
             DB::beginTransaction();
 
-            // Simpan ke tabel users
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -50,7 +55,6 @@ class PatientController extends Controller
                 'role' => 'patient',
             ]);
 
-            // Simpan ke tabel patients
             $patient = Patient::create([
                 'user_id' => $user->id,
                 'date_of_birth' => $request->date_of_birth,
@@ -82,10 +86,8 @@ class PatientController extends Controller
         try {
             DB::beginTransaction();
 
-            // Update tabel users
             $user->update($request->only(['name', 'email']));
-            
-            // Update tabel patients
+
             $patient->update($request->only(['date_of_birth', 'address', 'phone']));
 
             DB::commit();

@@ -11,7 +11,7 @@ class MedicalRecordExportController extends Controller
     public function exportPdf()
     {
         $records = MedicalRecord::with([
-            'appointment.patient.user', 
+            'appointment.patient.user',
             'appointment.doctor.user'
         ])->get();
 
@@ -28,11 +28,11 @@ class MedicalRecordExportController extends Controller
     public function exportCsv()
     {
         $fileName = 'laporan-rekam-medis-' . date('Ymd') . '.csv';
-        
-        $records = MedicalRecord::with([
-            'appointment.patient.user', 
+
+        $recordsQuery = MedicalRecord::with([
+            'appointment.patient.user',
             'appointment.doctor.user'
-        ])->get();
+        ]);
 
         $headers = [
             "Content-type"        => "text/csv",
@@ -42,10 +42,11 @@ class MedicalRecordExportController extends Controller
             "Expires"             => "0"
         ];
 
-        $callback = function() use($records) {
+        $callback = function() use($recordsQuery) {
             $file = fopen('php://output', 'w');
             fputcsv($file, ['ID Rekam Medis', 'Tanggal', 'Nama Pasien', 'Nama Dokter', 'Diagnosa', 'Terapi']);
-            foreach ($records as $record) {
+
+            foreach ($recordsQuery->cursor() as $record) {
                 fputcsv($file, [
                     $record->id,
                     $record->created_at->format('Y-m-d'),
