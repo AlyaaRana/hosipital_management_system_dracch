@@ -11,10 +11,25 @@ class RoleMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  Closure(Request): (Response)  $next
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  string  ...$roles
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
+        if (!$request->user() || !in_array($request->user()->role, $roles)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Forbidden: Anda tidak memiliki hak akses untuk tindakan ini.',
+                'data' => null,
+                'errors' => [
+                    'code' => 403,
+                    'detail' => 'Role pengguna tidak memiliki izin ke endpoint ini.'
+                ]
+            ], 403);
+        }
+
         return $next($request);
     }
 }

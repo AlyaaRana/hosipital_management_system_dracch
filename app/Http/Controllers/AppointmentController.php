@@ -1,23 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\StoreAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
 class AppointmentController extends Controller
 {
-    public function store(Request $request)
+    public function store(StoreAppointmentRequest $request)
     {
-        $request->validate([
-            'doctor_id' => 'required|exists:doctors,id',
-            'schedule_id' => 'required|exists:schedules,id',
-            'appointment_date' => 'required|date|after_or_equal:today',
-        ]);
-
         return DB::transaction(function () use ($request) {
             $schedule = Schedule::lockForUpdate()->findOrFail($request->schedule_id);
 
@@ -39,7 +32,8 @@ class AppointmentController extends Controller
                 'doctor_id' => $request->doctor_id,
                 'schedule_id' => $request->schedule_id,
                 'appointment_date' => $request->appointment_date,
-                'status' => 'pending'
+                'status' => 'pending',
+                'complaint' => $request->complaint,
             ]);
 
             $schedule->decrement('available_slots');
@@ -51,8 +45,12 @@ class AppointmentController extends Controller
         });
     }
 
-    public function getInternalReports()
+    public function exportReports()
     {
+        if (Auth::user()->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         $report1 = DB::select("
             SELECT u.name as patient_name, a.appointment_date, d.specialization
             FROM appointments a
@@ -68,21 +66,48 @@ class AppointmentController extends Controller
             JOIN doctors d ON a.doctor_id = d.id
         ");
 
-        $report3 = DB::select("
-            SELECT f.filename, f.fileable_type, u.name AS uploader_name, mr.diagnosis
-            FROM files f
-            JOIN users u ON f.uploaded_by = u.id
-            JOIN medical_records mr ON f.fileable_id = mr.id
-            WHERE f.fileable_type = 'App\\\\Models\\\\MedicalRecord'
-        ");
-
         return response()->json([
             'status' => 'success',
             'reports' => [
                 'patient_doctor_list' => $report1,
-                'medical_history' => $report2,
-                'file_audit_report' => $report3
+                'medical_history' => $report2
             ]
         ]);
+    }
+
+    public function show($id)
+    {
+        $appointment = Appointment::with(['doctor', 'patient'])->findOrFail($id);
+
+        if (Auth::user()->role !== 'admin' && Auth::id() !== $appointment->patient_id) {
+            return response()->json(['message' => 'Access Denied'], 403);
+        }
+
+        return response()->json($appointment);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $appointment = Appointment::findOrFail($id);
+
+        $request->validate([
+            'status' => 'required|in:pending,confirmed,cancelled,completed'
+        ]);
+
+        $appointment->update(['status' => $request->status]);
+
+        return response()->json(['message' => 'Status janji temu diupdate', 'data' => $appointment]);
+    }
+
+    public function destroy($id)
+    {
+        $appointment = Appointment::findOrFail($id);
+
+        if ($appointment->status !== 'pending') {
+            return response()->json(['message' => 'Janji temu yang sudah diproses tidak bisa dibatalkan'], 422);
+        }
+
+        $appointment->delete();
+        return response()->json(['message' => 'Janji temu berhasil dibatalkan']);
     }
 }

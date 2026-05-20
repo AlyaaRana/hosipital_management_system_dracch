@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('day_of_week');
             $table->time('start_time');
             $table->time('end_time');
+            $table->integer('available_slots')->default(5);
             $table->timestamps();
         });
     }
