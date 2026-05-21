@@ -17,7 +17,7 @@ class DoctorController extends Controller
 
     public function index(Request $request)
     {
-        $doctors = Doctor::with('user')->paginate(10);
+        $doctors = Doctor::with(['user', 'schedules'])->paginate(10);
         $resource = DoctorResource::collection($doctors);
 
         $data = [

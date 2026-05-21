@@ -44,7 +44,7 @@ class MedicalRecordExportController extends Controller
 
         $callback = function() use($recordsQuery) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, ['ID Rekam Medis', 'Tanggal', 'Nama Pasien', 'Nama Dokter', 'Diagnosa', 'Terapi']);
+            fputcsv($file, ['ID Rekam Medis', 'Tanggal', 'Nama Pasien', 'Nama Dokter', 'Diagnosa', 'Resep']);
 
             foreach ($recordsQuery->cursor() as $record) {
                 fputcsv($file, [
@@ -53,7 +53,7 @@ class MedicalRecordExportController extends Controller
                     $record->appointment->patient->user->name ?? 'N/A',
                     $record->appointment->doctor->user->name ?? 'N/A',
                     $record->diagnosis,
-                    $record->treatment,
+                    $record->prescription,
                 ]);
             }
 

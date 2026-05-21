@@ -20,6 +20,17 @@ class DoctorResource extends JsonResource
             'spesialis' => $this->specialization,
             'kontak' => $this->phone,
             'foto' => $this->photo,
+            'jadwal' => $this->whenLoaded('schedules', function () {
+                return $this->schedules->map(function ($schedule) {
+                    return [
+                        'id' => $schedule->id,
+                        'hari' => $schedule->day_of_week,
+                        'mulai' => $schedule->start_time,
+                        'selesai' => $schedule->end_time,
+                        'kuota' => $schedule->available_slots,
+                    ];
+                });
+            }),
         ];
     }
 }

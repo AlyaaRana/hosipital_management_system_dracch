@@ -15,13 +15,13 @@
         <tr>
             <th>ID</th>
             <th>Diagnosa</th>
-            <th>Terapi</th>
+            <th>Resep</th>
         </tr>
         @foreach($records as $record)
         <tr>
             <td>{{ $record->id }}</td>
             <td>{{ $record->diagnosis }}</td>
-            <td>{{ $record->treatment }}</td>
+            <td>{{ $record->prescription }}</td>
         </tr>
         @endforeach
     </table>

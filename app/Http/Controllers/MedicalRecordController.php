@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\MedicalRecord;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MedicalRecordController extends Controller
 {
@@ -18,6 +19,11 @@ class MedicalRecordController extends Controller
         ]);
 
         $appointment = Appointment::findOrFail($request->appointment_id);
+        $doctor = Auth::user()->doctor;
+
+        if (!$doctor || $doctor->id !== $appointment->doctor_id) {
+            return response()->json(['message' => 'Access Denied: Anda tidak berwenang untuk rekam medis ini.'], 403);
+        }
 
         $medicalRecord = MedicalRecord::create([
             'appointment_id' => $appointment->id,
@@ -35,7 +41,16 @@ class MedicalRecordController extends Controller
 
     public function show($id)
     {
-        $medicalRecord = MedicalRecord::with('appointment')->findOrFail($id);
+        $medicalRecord = MedicalRecord::with(['appointment.patient.user', 'appointment.doctor.user'])->findOrFail($id);
+        $user = Auth::user();
+        $appointment = $medicalRecord->appointment;
+
+        $isPatient = $user->role === 'patient' && $user->patient?->id === $appointment->patient_id;
+        $isDoctor = $user->role === 'doctor' && $user->doctor?->id === $medicalRecord->doctor_id;
+
+        if ($user->role !== 'admin' && !$isPatient && !$isDoctor) {
+            return response()->json(['message' => 'Access Denied'], 403);
+        }
 
         return response()->json([
             'message' => 'Detail rekam medis ditemukan',

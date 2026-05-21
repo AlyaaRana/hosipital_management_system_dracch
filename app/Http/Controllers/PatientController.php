@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Http\Resources\v1\PatientResource;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -74,6 +75,12 @@ class PatientController extends Controller
     {
         $patient = Patient::findOrFail($id);
         $user = $patient->user;
+        $currentUser = Auth::user();
+
+        if ($currentUser->role !== 'admin' && $currentUser->patient?->id !== $patient->id) {
+            return response()->json(['status' => 'error', 'message' => 'Access Denied'], 403);
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -101,6 +108,12 @@ class PatientController extends Controller
     public function show($id)
     {
         $patient = Patient::with('user')->findOrFail($id);
+        $currentUser = Auth::user();
+
+        if ($currentUser->role !== 'admin' && $currentUser->patient?->id !== $patient->id) {
+            return response()->json(['status' => 'error', 'message' => 'Access Denied'], 403);
+        }
+
         return $this->success(new PatientResource($patient), 'Detail pasien ditemukan');
     }
 

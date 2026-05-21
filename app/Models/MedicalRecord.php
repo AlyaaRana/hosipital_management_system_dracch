@@ -1,64 +1,36 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
-use App\Models\MedicalRecord;
-use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class MedicalRecordExportController extends Controller
+class MedicalRecord extends Model
 {
-    public function exportPdf()
+    use HasFactory;
+
+    protected $fillable = [
+        'appointment_id',
+        'doctor_id',
+        'diagnosis',
+        'prescription',
+        'notes',
+    ];
+
+    public function appointment(): BelongsTo
     {
-        $records = MedicalRecord::with([
-            'appointment.patient.user',
-            'appointment.doctor.user'
-        ])->get();
-
-        $data = [
-            'title' => 'Laporan Rekam Medis Rumah Sakit',
-            'date' => date('d M Y'),
-            'records' => $records
-        ];
-        $pdf = PDF::loadView('exports.medical_records_pdf', $data);
-
-        return $pdf->download('laporan-rekam-medis-' . date('Ymd') . '.pdf');
+        return $this->belongsTo(Appointment::class);
     }
 
-    public function exportCsv()
+    public function doctor(): BelongsTo
     {
-        $fileName = 'laporan-rekam-medis-' . date('Ymd') . '.csv';
+        return $this->belongsTo(Doctor::class);
+    }
 
-        $records = MedicalRecord::with([
-            'appointment.patient.user',
-            'appointment.doctor.user'
-        ])->get();
-
-        $headers = [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
-        ];
-
-        $callback = function() use($records) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, ['ID Rekam Medis', 'Tanggal', 'Nama Pasien', 'Nama Dokter', 'Diagnosa', 'Terapi']);
-            foreach ($records as $record) {
-                fputcsv($file, [
-                    $record->id,
-                    $record->created_at->format('Y-m-d'),
-                    $record->appointment->patient->user->name ?? 'N/A',
-                    $record->appointment->doctor->user->name ?? 'N/A',
-                    $record->diagnosis,
-                    $record->treatment,
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+    public function files(): MorphMany
+    {
+        return $this->morphMany(File::class, 'fileable');
     }
 }

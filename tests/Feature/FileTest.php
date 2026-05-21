@@ -16,7 +16,11 @@ class FileTest extends TestCase
     {
         Storage::fake('local');
 
-        $user = User::factory()->create(['role' => 'patient', 'password' => 'password']);
+        $user = User::factory()->create([
+            'role' => 'patient',
+            'password' => 'password',
+            'email_verified_at' => now(),
+        ]);
 
         $response = $this->actingAs($user, 'sanctum')
             ->postJson('/api/v1/files/upload', [
@@ -41,7 +45,11 @@ class FileTest extends TestCase
     {
         Storage::fake('local');
 
-        $user = User::factory()->create(['role' => 'patient', 'password' => 'password']);
+        $user = User::factory()->create([
+            'role' => 'patient',
+            'password' => 'password',
+            'email_verified_at' => now(),
+        ]);
 
         $uploadResponse = $this->actingAs($user, 'sanctum')
             ->postJson('/api/v1/files/upload', [

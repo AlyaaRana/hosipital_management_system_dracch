@@ -13,7 +13,11 @@ class ReportExportTest extends TestCase
 
     public function test_admin_can_access_report_export(): void
     {
-        $admin = User::factory()->create(['role' => 'admin', 'password' => 'password']);
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'password' => 'password',
+            'email_verified_at' => now(),
+        ]);
 
         $response = $this->actingAs($admin, 'sanctum')
             ->getJson('/api/v1/reports/export');
@@ -25,7 +29,11 @@ class ReportExportTest extends TestCase
 
     public function test_non_admin_cannot_access_report_export(): void
     {
-        $user = User::factory()->create(['role' => 'patient', 'password' => 'password']);
+        $user = User::factory()->create([
+            'role' => 'patient',
+            'password' => 'password',
+            'email_verified_at' => now(),
+        ]);
 
         $response = $this->actingAs($user, 'sanctum')
             ->getJson('/api/v1/reports/export');

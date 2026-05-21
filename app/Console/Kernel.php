@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\PurgeDeletedFiles::class,
+        \App\Console\Commands\ProcessAppointments::class,
     ];
 
     /**
@@ -21,8 +22,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-
         $schedule->command('files:purge')->daily();
+        $schedule->command('hospital:process-appointments')->daily();
     }
 
     /**
