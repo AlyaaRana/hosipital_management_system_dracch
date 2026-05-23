@@ -20,9 +20,15 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/doctors', [DoctorController::class, 'index']);
         Route::post('/files/upload', [FileController::class, 'upload']);
+    Route::get('/doctors/{id}', [DoctorController::class, 'show']);
 
         Route::middleware('role:admin')->group(function () {
             Route::get('/patients', [PatientController::class, 'index']);
+            Route::post('/patients', [PatientController::class, 'store']);
+            Route::delete('/patients/{id}', [PatientController::class, 'destroy']);
+            Route::post('/doctors', [DoctorController::class, 'store']);
+            Route::put('/doctors/{id}', [DoctorController::class, 'update']);
+            Route::delete('/doctors/{id}', [DoctorController::class, 'destroy']);
             Route::get('/reports/export', [AppointmentController::class, 'exportReports']);
             Route::get('/medical-records/export/pdf', [MedicalRecordExportController::class, 'exportPdf']);
             Route::get('/medical-records/export/csv', [MedicalRecordExportController::class, 'exportCsv']);

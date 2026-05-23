@@ -15,12 +15,13 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/auth/register?name&email&password&password_confirmation&date_of_birth&address&phone",
+              "raw": "{{base_url}}/api/v1/auth/register?name&email&password&password_confirmation&date_of_birth&address&phone",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "auth",
                 "register"
               ],
@@ -80,12 +81,13 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/auth/login?email&password",
+              "raw": "{{base_url}}/api/v1/auth/login?email&password",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "auth",
                 "login"
               ],
@@ -109,18 +111,19 @@
           "response": []
         },
         {
-          "name": "POST /api/auth/logout",
+          "name": "POST /api/v1/auth/logout",
           "id": "26f43a10-b6ed-4d64-a0ef-db7e82d7bb89",
           "request": {
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/auth/logout",
+              "raw": "{{base_url}}/api/v1/auth/logout",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "auth",
                 "logout"
               ]
@@ -157,12 +160,13 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/patients",
+              "raw": "{{base_url}}/api/v1/patients",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "patients"
               ]
             },
@@ -177,12 +181,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/patients/{id}",
+              "raw": "{{base_url}}/api/v1/patients/{id}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "patients",
                 "{id}"
               ]
@@ -198,12 +203,13 @@
             "method": "PUT",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/patients/{id}?name&email&date_of_birth&address&phone",
+              "raw": "{{base_url}}/api/v1/patients/{id}?name&email&date_of_birth&address&phone",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "patients",
                 "{id}"
               ],
@@ -257,12 +263,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/doctors",
+              "raw": "{{base_url}}/api/v1/doctors",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "doctors"
               ]
             },
@@ -283,12 +290,13 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/appointments?doctor_id&schedule_id&appointment_date&complaint",
+              "raw": "{{base_url}}/api/v1/appointments?doctor_id&schedule_id&appointment_date&complaint",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "appointments"
               ],
               "query": [
@@ -323,18 +331,19 @@
           "response": []
         },
         {
-          "name": "GET /api/V1/appointments/{id}",
+          "name": "GET /api/v1/appointments/{id}",
           "id": "d2b67317-3842-412c-a632-7fdec7bccefc",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/appointments/{id}",
+              "raw": "{{base_url}}/api/v1/appointments/{id}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "appointments",
                 "{id}"
               ]
@@ -344,7 +353,7 @@
           "response": []
         },
         {
-          "name": "PUT /api/v1appointments/{id}",
+          "name": "PUT /api/v1/appointments/{id}",
           "id": "d3892d02-7790-49d8-8435-0ab1d533d40a",
           "request": {
             "method": "PUT",
@@ -358,12 +367,13 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/appointments/{id}?status",
+              "raw": "{{base_url}}/api/v1/appointments/{id}?status",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "appointments",
                 "{id}"
               ],
@@ -388,12 +398,13 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/appointments/{id}",
+              "raw": "{{base_url}}/api/v1/appointments/{id}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "appointments",
                 "{id}"
               ]
@@ -415,12 +426,13 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/medical-records?appointment_id&diagnosis&prescription&notes",
+              "raw": "{{base_url}}/api/v1/medical-records?appointment_id&diagnosis&prescription&notes",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "medical-records"
               ],
               "query": [
@@ -461,12 +473,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/medical-records/{id}",
+              "raw": "{{base_url}}/api/v1/medical-records/{id}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "medical-records",
                 "{id}"
               ]
@@ -488,12 +501,13 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/files/upload?file&fileable_type&fileable_id",
+              "raw": "{{base_url}}/api/v1/files/upload?file&fileable_type&fileable_id",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "files",
                 "upload"
               ],
@@ -529,12 +543,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/files/{id}",
+              "raw": "{{base_url}}/api/v1/files/{id}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "files",
                 "{id}"
               ]
@@ -550,12 +565,13 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/files/{id}",
+              "raw": "{{base_url}}/api/v1/files/{id}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "files",
                 "{id}"
               ]

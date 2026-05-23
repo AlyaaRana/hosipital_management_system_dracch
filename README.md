@@ -40,18 +40,44 @@ Berikut adalah langkah-langkah untuk menjalankan aplikasi secara lokal:
 6. Jalankan server lokal:
    php artisan serve
 
+## 📌 API Endpoints
+Berikut endpoint utama yang tersedia di API:
+
+- `POST /api/v1/auth/register`
+- `POST /api/v1/auth/login`
+- `POST /api/v1/auth/logout`
+- `GET /api/v1/doctors`
+- `GET /api/v1/doctors/{id}`
+- `GET /api/v1/patients`
+- `POST /api/v1/patients`
+- `GET /api/v1/patients/{id}`
+- `PUT /api/v1/patients/{id}`
+- `DELETE /api/v1/patients/{id}`
+- `POST /api/v1/appointments`
+- `GET /api/v1/appointments/{id}`
+- `PUT /api/v1/appointments/{id}`
+- `DELETE /api/v1/appointments/{id}`
+- `POST /api/v1/medical-records`
+- `GET /api/v1/medical-records/{id}`
+- `POST /api/v1/files/upload`
+- `GET /api/v1/files/{id}`
+- `DELETE /api/v1/files/{id}`
+- `GET /api/v1/reports/export`
+
 ## 🧪 Test Plan & Code Coverage
 Proyek ini mengimplementasikan Feature Test dan Unit Test sesuai standar (minimal 10 Test Cases).
 Unit Tests (tests/Unit/)
-1. AppointmentStatusTest - State machine logic pergantian status janji temu.
-2. FileValidationTest - Validasi ukuran maksimal (5MB) dan ekstensi file (jpeg/png/pdf).
-3. DoctorScheduleTest - Validasi jadwal dokter.
+1. ExampleTest - Contoh unit test dasar.
 
 Feature Tests (tests/Feature/)
-1. AuthenticationTest - Uji coba Register, Login (200), Login Gagal (401), dan Logout.
+1. AuthTest - Uji coba Register, Login, dan Logout.
 2. AppointmentTest - Membuat appointment (201), Gagal saat jadwal penuh (422), Update, dan Pembatalan.
-3. FileUploadTest - Upload file sukses, Stream/Read file, dan Soft delete file.
-4. ReportTest - Uji export laporan PDF/CSV untuk Admin (200) dan ditolak untuk non-Admin (403).
+3. AppointmentMailTest - Verifikasi email konfirmasi dan perubahan status email.
+4. ReportExportTest - Uji export laporan PDF/CSV untuk Admin (200) dan ditolak untuk non-Admin (403).
+5. DoctorScheduleTest - Validasi jadwal dokter.
+6. FileTest - Upload file sukses, baca file, dan Soft delete file.
+7. SchedulerCommandTest - Validasi scheduler command untuk appointment reminder dan file purge.
+8. ErrorHandlingTest - Validasi error response dan akses terlarang.
 
 Menjalankan Test:
 composer test
