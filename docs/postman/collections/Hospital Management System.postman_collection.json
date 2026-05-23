@@ -1,0 +1,606 @@
+{
+  "info": {
+    "_postman_id": "a264a5b1-b2a9-4359-b58d-b03df75f1756",
+    "name": "Hospital Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST /api/v1/auth/register",
+          "id": "5553ca74-b95c-4195-90eb-8f361bff5dfe",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register?name&email&password&password_confirmation&date_of_birth&address&phone",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "0d0d04e3-18a7-4339-b750-b2c35ba5b799"
+                },
+                {
+                  "key": "email",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "3b443a3a-90dc-46fb-9d7f-a7bf263cddeb"
+                },
+                {
+                  "key": "password",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "254b31a7-3fc6-4f3a-b366-468ad6c4f8d3"
+                },
+                {
+                  "key": "password_confirmation",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "377e1f9f-b2d4-421a-bbbc-d3b4a1f275d6"
+                },
+                {
+                  "key": "date_of_birth",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "71aab3d9-bc91-4f8e-a6b1-4d7859c17ac3"
+                },
+                {
+                  "key": "address",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "d5027870-6c14-4a62-8925-587ee42f1546"
+                },
+                {
+                  "key": "phone",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "7396ed3b-1269-42ce-ad28-d39d3ebf07a3"
+                }
+              ]
+            },
+            "description": "POST {{base_url}}/api/auth/register"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/auth/login",
+          "id": "a9c75b2e-00c9-4cb4-9502-419527e80ff0",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login?email&password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "375da02b-3408-4006-9e9c-6e6b863fe742"
+                },
+                {
+                  "key": "password",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "7fb3b457-408f-44df-9511-d2a3da73639a"
+                }
+              ]
+            },
+            "description": "POST {{base_url}}/api/auth/login"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/auth/logout",
+          "id": "26f43a10-b6ed-4d64-a0ef-db7e82d7bb89",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "POST {{base_url}}/api/auth/logout"
+          },
+          "response": []
+        }
+      ],
+      "id": "b80deb24-c00e-41d6-8a25-53cba3847bf5"
+    },
+    {
+      "name": "Patients",
+      "item": [
+        {
+          "name": "GET /api/v1/patients",
+          "id": "051f11ad-a81a-4a97-87c9-dc84321cc162",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "1|2G10ufe3EKE6Tds2q7ufUwwqJKQTemyaRGMcX1ru9d4c4796",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/patients",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "patients"
+              ]
+            },
+            "description": "GET {{base_url}}/api/patients"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/v1/patients/{id}",
+          "id": "225921fb-76c7-4532-b171-11a1b987f9f8",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/patients/{id}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "patients",
+                "{id}"
+              ]
+            },
+            "description": "GET {{base_url}}/api/patients/{id}"
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/v1/patients/{id}",
+          "id": "fcf90faa-794d-4072-80d1-a56fc9cb8191",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/patients/{id}?name&email&date_of_birth&address&phone",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "patients",
+                "{id}"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "371a2579-2280-4735-a43d-2f0edd0317e8"
+                },
+                {
+                  "key": "email",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "5a84d8c0-de70-427d-9e26-6f4fffd313a9"
+                },
+                {
+                  "key": "date_of_birth",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "70667521-9ac5-4a4b-a9ae-c6fcf687821d"
+                },
+                {
+                  "key": "address",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "9b2c6163-93ce-4259-8fe7-d80a0da51778"
+                },
+                {
+                  "key": "phone",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "d9fab38a-2afa-42f8-b91f-83dad106cf73"
+                }
+              ]
+            },
+            "description": "PUT {{base_url}}/api/patients/{id}"
+          },
+          "response": []
+        }
+      ],
+      "id": "85deaad6-c394-476e-9c9c-dbd2a304b667"
+    },
+    {
+      "name": "Doctors",
+      "item": [
+        {
+          "name": "GET /api/v1/doctors",
+          "id": "3ab71755-7335-4f8c-aa6f-dd23f5c47118",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/doctors",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "doctors"
+              ]
+            },
+            "description": "GET {{base_url}}/api/doctors"
+          },
+          "response": []
+        }
+      ],
+      "id": "86ddf453-bcd0-4790-aa6c-559b9e1ce41b"
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "POST /api/v1/appointments",
+          "id": "8a98c183-7eba-49c9-a687-5d19d246c77d",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/appointments?doctor_id&schedule_id&appointment_date&complaint",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "appointments"
+              ],
+              "query": [
+                {
+                  "key": "doctor_id",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "9dd2c249-b56b-4ebb-83c5-56dee3663ad3"
+                },
+                {
+                  "key": "schedule_id",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "926b2642-a72b-448c-a1e1-d932eaa06f00"
+                },
+                {
+                  "key": "appointment_date",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "13a65a0d-3beb-4986-9cae-6b67ad7faf6f"
+                },
+                {
+                  "key": "complaint",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "83ece417-861e-40e4-a6bd-c417b6301902"
+                }
+              ]
+            },
+            "description": "POST {{base_url}}/api/appointments"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/V1/appointments/{id}",
+          "id": "d2b67317-3842-412c-a632-7fdec7bccefc",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/appointments/{id}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "appointments",
+                "{id}"
+              ]
+            },
+            "description": "GET {{base_url}}/api/appointments/{id}"
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/v1appointments/{id}",
+          "id": "d3892d02-7790-49d8-8435-0ab1d533d40a",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "uuid": "38b6ece6-5f2d-4d42-aa42-48e08027e27f",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/appointments/{id}?status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "appointments",
+                "{id}"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": null,
+                  "description": "confirmed, cancelled, completed",
+                  "type": "text",
+                  "uuid": "8d333fce-1053-499a-b652-8f5c01e7c6ab"
+                }
+              ]
+            },
+            "description": "PUT {{base_url}}/api/appointments/{id}"
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/v1/appointments/{id}",
+          "id": "343c1cad-de7e-4b17-bca9-1f2a86b7a771",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/appointments/{id}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "appointments",
+                "{id}"
+              ]
+            },
+            "description": "DELETE {{base_url}}/api/appointments/{id}"
+          },
+          "response": []
+        }
+      ],
+      "id": "bac8ba12-4526-498d-a24d-25026738ebeb"
+    },
+    {
+      "name": "Medical Records",
+      "item": [
+        {
+          "name": "POST /api/v1/medical-records",
+          "id": "ae1347b3-4f1d-40f2-9a5c-018930df6e3f",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/medical-records?appointment_id&diagnosis&prescription&notes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "medical-records"
+              ],
+              "query": [
+                {
+                  "key": "appointment_id",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "26424b40-dee4-484e-b76b-109a913ae41e"
+                },
+                {
+                  "key": "diagnosis",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "cc1334a0-e460-42c1-9bd7-c5838950d65e"
+                },
+                {
+                  "key": "prescription",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "ac0fb1e0-39dd-4fca-a1f8-502b1335a5ad"
+                },
+                {
+                  "key": "notes",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "80ddfe27-7401-4808-92ad-5eede003c5b0"
+                }
+              ]
+            },
+            "description": "POST {{base_url}}/api/medical-records"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/v1/medical-records/{id}",
+          "id": "606215e4-a2c1-4863-98aa-cb83455e982a",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/medical-records/{id}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "medical-records",
+                "{id}"
+              ]
+            },
+            "description": "GET {{base_url}}/api/medical-records/{id}"
+          },
+          "response": []
+        }
+      ],
+      "id": "45008d22-e8b9-4c54-aaf5-739a1ddaffb0"
+    },
+    {
+      "name": "Files",
+      "item": [
+        {
+          "name": "POST /api/v1/files/upload",
+          "id": "da5cfe39-7ac5-4919-9d08-ff653b2ccd9a",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/files/upload?file&fileable_type&fileable_id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "files",
+                "upload"
+              ],
+              "query": [
+                {
+                  "key": "file",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "da2ff74c-8671-4252-a868-4657d1bd917d"
+                },
+                {
+                  "key": "fileable_type",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "0e402276-90df-4244-be90-dafa850b538e"
+                },
+                {
+                  "key": "fileable_id",
+                  "value": null,
+                  "type": "text",
+                  "uuid": "bfaed67e-1963-4cec-98c5-caa72115f7a5"
+                }
+              ]
+            },
+            "description": "POST {{base_url}}/api/files/upload"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/v1/files/{id}",
+          "id": "3fa3fd5c-2762-47fd-be73-cd653e1f1a8b",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/files/{id}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "files",
+                "{id}"
+              ]
+            },
+            "description": "GET {{base_url}}/api/files/{id}"
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/v1/files/{id}",
+          "id": "8558bf3f-9874-45da-800c-3e682cea0f33",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/files/{id}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "files",
+                "{id}"
+              ]
+            },
+            "description": "DELETE {{base_url}}/api/files/{id}"
+          },
+          "response": []
+        }
+      ],
+      "id": "60642d6a-c3fc-4fc6-8e7d-761fcee68267"
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "GET /api/v1/reports/export",
+          "id": "29cd4bd5-eebc-490a-a073-56af3b5341d6",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reports/export",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "export"
+              ]
+            },
+            "description": "GET {{base_url}}/api/reports/export"
+          },
+          "response": []
+        }
+      ],
+      "id": "ea896ea6-f55e-465b-a346-d2d039ddadda"
+    }
+  ],
+  "variable": [
+    {
+      "id": "79fa8ece-cbe5-410a-8988-e972d84ab349",
+      "key": "base_url",
+      "value": ""
+    }
+  ]
+}
